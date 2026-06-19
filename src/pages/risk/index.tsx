@@ -50,28 +50,36 @@ const RiskPage: React.FC = () => {
 
   const showRiskDetail = useCallback(
     (risk: RiskItem) => {
-      const statusText = risk.markLabel ? `\n\n【处置状态】${risk.markLabel}` : '';
+      const wasUnread = !risk.isRead;
+      const currentStatus = risk.markLabel ? `\n\n【当前处置】${risk.markLabel}` : '';
+      const canChangeHQ = risk.mark !== 'headquarters';
+      const canChangeRegion = risk.mark !== 'region';
       Taro.showModal({
         title: `${levelLabels[risk.level]} · ${risk.changeType}`,
-        content: risk.description + statusText,
-        showCancel: true,
-        confirmText: '交区域核实',
-        cancelText: '需总部回应',
+        content: risk.description + currentStatus,
+        showCancel: canChangeHQ,
+        confirmText: canChangeRegion ? '交区域核实' : '已交区域',
+        cancelText: canChangeHQ ? '需总部回应' : '已交总部',
         cancelColor: '#FF7D00',
         confirmColor: '#1E56A0',
         success: (res) => {
-          if (!risk.mark) {
-            if (res.confirm) {
-              markRisk(risk.id, 'region');
-              Taro.showToast({ title: '已转交区域核实', icon: 'success' });
-            } else if (res.cancel) {
-              markRisk(risk.id, 'headquarters');
-              Taro.showToast({ title: '已提交总部回应', icon: 'success' });
-            }
+          if (res.confirm && canChangeRegion) {
+            markRisk(risk.id, 'region');
+            Taro.showToast({ title: '已转交区域核实', icon: 'success' });
+          } else if (res.cancel && canChangeHQ) {
+            markRisk(risk.id, 'headquarters');
+            Taro.showToast({ title: '已提交总部回应', icon: 'success' });
+          } else if (wasUnread) {
+            markRisk(risk.id, 'read');
           }
+        },
+        fail: () => {
+          if (wasUnread) markRisk(risk.id, 'read');
         }
       });
-      if (!risk.isRead) markRisk(risk.id, 'read');
+      if (wasUnread && !canChangeHQ && !canChangeRegion) {
+        markRisk(risk.id, 'read');
+      }
     },
     [markRisk]
   );
@@ -248,22 +256,28 @@ const RiskPage: React.FC = () => {
                   </View>
                   <Text className={styles.updateTime}>{risk.updateTime}</Text>
                 </View>
-                {!risk.mark && (
-                  <View className={styles.actionRow}>
-                    <View
-                      className={classnames(styles.miniBtn, styles.btnHQ)}
-                      onClick={(e) => handleQuickMark(e, risk.id, 'headquarters')}
-                    >
-                      总部回应
-                    </View>
-                    <View
-                      className={classnames(styles.miniBtn, styles.btnRegion)}
-                      onClick={(e) => handleQuickMark(e, risk.id, 'region')}
-                    >
-                      区域核实
-                    </View>
+                <View className={styles.actionRow}>
+                  <View
+                    className={classnames(
+                      styles.miniBtn,
+                      styles.btnHQ,
+                      risk.mark === 'headquarters' && styles.miniBtnActive
+                    )}
+                    onClick={(e) => handleQuickMark(e, risk.id, 'headquarters')}
+                  >
+                    {risk.mark === 'headquarters' ? '✓ 已交总部' : '总部回应'}
                   </View>
-                )}
+                  <View
+                    className={classnames(
+                      styles.miniBtn,
+                      styles.btnRegion,
+                      risk.mark === 'region' && styles.miniBtnActive
+                    )}
+                    onClick={(e) => handleQuickMark(e, risk.id, 'region')}
+                  >
+                    {risk.mark === 'region' ? '✓ 已交区域' : '区域核实'}
+                  </View>
+                </View>
               </View>
             </View>
           ))

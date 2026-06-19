@@ -56,6 +56,8 @@
     "dayjs": "^1.11.10"
   },
   "devDependencies": {
+    "ajv": "6.15.0",
+    "ajv-keywords": "3.5.2",
     "miniprogram-ci": "^2.1.26",
     "tt-ide-cli": "^0.1.31",
     "minidev": "^2.2.5",
@@ -66,7 +68,7 @@
     "@tarojs/cli": "4.1.9",
     "@types/webpack-env": "^1.13.6",
     "@types/react": "^18.0.0",
-    "webpack": "5.78.0",
+    "webpack": "5.91.0",
     "@tarojs/taro-loader": "4.1.9",
     "@tarojs/webpack5-runner": "4.1.9",
     "babel-preset-taro": "4.1.9",
@@ -85,5 +87,14 @@
     "postcss": "^8.4.18",
     "ts-node": "^10.9.1",
     "@types/node": "^18.15.11"
+  },
+  "overrides": {
+    "ajv-keywords": {
+      "ajv": "8.20.0"
+    },
+    "ajv-formats": {
+      "ajv": "8.20.0"
+    },
+    "webpack": "5.91.0"
   }
 }

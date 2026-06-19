@@ -30,7 +30,7 @@ const RecordsPage: React.FC = () => {
     const read = allRecords.filter(r => r.mark === 'read').length;
     const hq = allRecords.filter(r => r.mark === 'headquarters').length;
     const rg = allRecords.filter(r => r.mark === 'region').length;
-    return { total, read, hq, rg };
+    return { total, read, headquarters: hq, region: rg };
   }, [allRecords]);
 
   const markFilters: { key: FilterMark; label: string }[] = [
@@ -48,7 +48,8 @@ const RecordsPage: React.FC = () => {
 
   const getFilterCount = (k: FilterMark): number => {
     if (k === 'all') return counts.total;
-    return counts[k as 'read' | 'hq' | 'rg'];
+    const v = counts[k];
+    return typeof v === 'number' ? v : 0;
   };
 
   const handleView = useCallback((rec: MarkedRecord) => {

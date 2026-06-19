@@ -171,15 +171,23 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const getMarkStats = () => {
     const newsStats = { read: 0, headquarters: 0, region: 0 };
     newsList.forEach(n => {
-      if (n.isRead) newsStats.read++;
-      if (n.mark === 'headquarters') newsStats.headquarters++;
-      if (n.mark === 'region') newsStats.region++;
+      if (n.mark === 'headquarters') {
+        newsStats.headquarters++;
+      } else if (n.mark === 'region') {
+        newsStats.region++;
+      } else if (n.mark === 'read') {
+        newsStats.read++;
+      }
     });
     const riskStats = { read: 0, headquarters: 0, region: 0 };
     riskList.forEach(r => {
-      if (r.isRead) riskStats.read++;
-      if (r.mark === 'headquarters') riskStats.headquarters++;
-      if (r.mark === 'region') riskStats.region++;
+      if (r.mark === 'headquarters') {
+        riskStats.headquarters++;
+      } else if (r.mark === 'region') {
+        riskStats.region++;
+      } else if (r.mark === 'read') {
+        riskStats.read++;
+      }
     });
     return {
       news: newsStats,
