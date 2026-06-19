@@ -5,7 +5,8 @@ export default defineAppConfig({
     'pages/risk/index',
     'pages/mine/index',
     'pages/detail/index',
-    'pages/records/index'
+    'pages/records/index',
+    'pages/briefing/index'
   ],
   window: {
     backgroundTextStyle: 'light',

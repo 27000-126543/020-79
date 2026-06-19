@@ -5,7 +5,7 @@ import styles from './index.module.scss';
 import classnames from 'classnames';
 import SubscriptionBar from '@/components/SubscriptionBar';
 import { useAppContext } from '@/store/app-context';
-import { RiskItem, MarkType } from '@/types';
+import { RiskItem, MarkType, NewsItem } from '@/types';
 
 type FilterType = 'all' | 'high' | 'medium' | 'low';
 
@@ -15,6 +15,7 @@ const levelLabels = { high: '高风险', medium: '中风险', low: '低风险' }
 const RiskPage: React.FC = () => {
   const {
     riskList,
+    newsList,
     markRisk,
     getUnreadRiskCount,
     filterRisksByKeywords,
@@ -104,6 +105,24 @@ const RiskPage: React.FC = () => {
     });
     Taro.showToast({ title: '已全部标记已读', icon: 'success' });
   }, [filteredRisks, markRisk]);
+
+  const handleViewRelated = useCallback((risk: RiskItem) => {
+    const timeline = risk.timeline;
+    const relatedTitles = risk.relatedNews
+      .map(nId => newsList.find(n => n.id === nId))
+      .filter(Boolean)
+      .map(n => `• ${(n as NewsItem).title}`)
+      .join('\n');
+    const timelineText = timeline
+      .map(t => `[${t.time}] ${t.title}${t.detail ? ' - ' + t.detail : ''}`)
+      .join('\n');
+    Taro.showModal({
+      title: `${risk.title}`,
+      content: `【关联报道】\n${relatedTitles || '无'}\n\n【事件时间线】\n${timelineText}`,
+      showCancel: false,
+      confirmText: '知道了'
+    });
+  }, [newsList]);
 
   usePullDownRefresh(() => {
     setTimeout(() => {
@@ -247,6 +266,13 @@ const RiskPage: React.FC = () => {
                   <Text key={i} className={styles.keywordTag}>#{kw}</Text>
                 ))}
               </View>
+
+              {risk.relatedNews.length > 0 && (
+                <View className={styles.relatedRow}>
+                  <Text className={styles.relatedLabel}>📎 {risk.relatedNews.length}篇关联报道</Text>
+                  <Text className={styles.relatedLink} onClick={(e) => { e.stopPropagation(); handleViewRelated(risk); }}>查看 →</Text>
+                </View>
+              )}
 
               <View className={styles.cardFooter}>
                 <View className={styles.footerLeft}>

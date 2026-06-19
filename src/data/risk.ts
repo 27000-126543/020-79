@@ -1,4 +1,4 @@
-import { RiskItem } from '@/types';
+import { RiskItem, TimelineNode } from '@/types';
 
 export const riskList: RiskItem[] = [
   {
@@ -12,7 +12,14 @@ export const riskList: RiskItem[] = [
     updateTime: '2024-01-15 16:30',
     keywords: ['华东', '质量问题', '媒体转向'],
     relatedNews: ['2', '8', '12'],
-    isRead: false
+    isRead: false,
+    timeline: [
+      { id: 'r1-t1', time: '2024-01-14 08:00', type: 'news', title: '地方媒体首次报道质量投诉', detail: '消费者投诉文章见报' },
+      { id: 'r1-t2', time: '2024-01-14 14:00', type: 'news', title: '3家媒体跟进报道', detail: '报道角度从产品变质转向品牌信任' },
+      { id: 'r1-t3', time: '2024-01-15 09:00', type: 'news', title: '华东8家地方媒体集中报道', detail: '负面占比升至65%' },
+      { id: 'r1-t4', time: '2024-01-15 16:30', type: 'risk', title: '系统识别为高风险预警' }
+    ] as TimelineNode[],
+    recommendation: '建议华东区域经理立即走访涉事门店，准备产品质量说明函，同步总部公关部统一口径'
   },
   {
     id: 'r2',
@@ -25,7 +32,13 @@ export const riskList: RiskItem[] = [
     updateTime: '2024-01-15 14:00',
     keywords: ['竞品对比', '评测', '排名'],
     relatedNews: ['5', '9'],
-    isRead: false
+    isRead: false,
+    timeline: [
+      { id: 'r2-t1', time: '2024-01-13 10:00', type: 'news', title: '首篇竞品对比评测发布' },
+      { id: 'r2-t2', time: '2024-01-14 11:30', type: 'news', title: '消费评测发布横向对比', detail: '悦活综合排名第4' },
+      { id: 'r2-t3', time: '2024-01-15 14:00', type: 'risk', title: '竞品对比升温预警' }
+    ] as TimelineNode[],
+    recommendation: '准备竞品差异化话术，突出鲜榨工艺和口感优势，避免直接对比价格'
   },
   {
     id: 'r3',
@@ -38,7 +51,13 @@ export const riskList: RiskItem[] = [
     updateTime: '2024-01-15 12:00',
     keywords: ['投诉', '消费者', '社交媒体'],
     relatedNews: ['2', '8'],
-    isRead: true
+    isRead: true,
+    timeline: [
+      { id: 'r3-t1', time: '2024-01-10 09:00', type: 'news', title: '零星投诉出现' },
+      { id: 'r3-t2', time: '2024-01-12 15:00', type: 'news', title: '投诉量周环比增长150%' },
+      { id: 'r3-t3', time: '2024-01-15 12:00', type: 'risk', title: '投诉量增长300%触发预警' }
+    ] as TimelineNode[],
+    recommendation: '建议客服团队增派人手，准备退款和补偿方案，同步发布质量保障声明'
   },
   {
     id: 'r4',
@@ -51,7 +70,15 @@ export const riskList: RiskItem[] = [
     updateTime: '2024-01-13 20:00',
     keywords: ['代工厂', '卫生', '热搜'],
     relatedNews: ['8', '12'],
-    isRead: false
+    isRead: false,
+    timeline: [
+      { id: 'r4-t1', time: '2024-01-11 16:00', type: 'news', title: '暗访报道首发', detail: '代工厂卫生问题曝光' },
+      { id: 'r4-t2', time: '2024-01-12 08:00', type: 'news', title: '5家媒体跟进' },
+      { id: 'r4-t3', time: '2024-01-12 18:30', type: 'news', title: '深度调查报道发布', detail: '悦活回应启动调查' },
+      { id: 'r4-t4', time: '2024-01-13 12:00', type: 'news', title: '话题登上微博热搜' },
+      { id: 'r4-t5', time: '2024-01-13 20:00', type: 'risk', title: '15家媒体跟进，风险升级' }
+    ] as TimelineNode[],
+    recommendation: '建议总部立即发布正式声明并公布整改措施，考虑召开媒体沟通会'
   },
   {
     id: 'r5',
@@ -64,7 +91,13 @@ export const riskList: RiskItem[] = [
     updateTime: '2024-01-11 18:00',
     keywords: ['北京', '促销', '消费者疑虑'],
     relatedNews: ['11'],
-    isRead: false
+    isRead: false,
+    timeline: [
+      { id: 'r5-t1', time: '2024-01-10 10:00', type: 'news', title: '门店开始5折促销' },
+      { id: 'r5-t2', time: '2024-01-11 09:30', type: 'news', title: '消费者质疑促销原因', detail: '北京消费指南报道' },
+      { id: 'r5-t3', time: '2024-01-11 18:00', type: 'risk', title: '消费者疑虑监测预警' }
+    ] as TimelineNode[],
+    recommendation: '建议门店明确促销原因，准备"节前常规促销"话术卡片，避免与质量问题关联'
   },
   {
     id: 'r6',
@@ -77,7 +110,13 @@ export const riskList: RiskItem[] = [
     updateTime: '2024-01-12 11:00',
     keywords: ['元气森林', '竞品', '市场份额'],
     relatedNews: ['9'],
-    isRead: true
+    isRead: true,
+    timeline: [
+      { id: 'r6-t1', time: '2024-01-11 10:00', type: 'news', title: '元气森林新品发布消息' },
+      { id: 'r6-t2', time: '2024-01-12 10:00', type: 'news', title: '鲜榨坊系列正式上市' },
+      { id: 'r6-t3', time: '2024-01-12 11:00', type: 'risk', title: '竞品动态风险提示' }
+    ] as TimelineNode[],
+    recommendation: '准备竞品应对方案，梳理自身差异化优势（工艺/口感/渠道），关注后续市场反应'
   }
 ];
 

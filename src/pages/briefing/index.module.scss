@@ -1,0 +1,250 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.header {
+  background: linear-gradient(135deg, $color-primary-dark 0%, $color-primary 60%, $color-primary-light 100%);
+  padding: $spacing-xl $page-padding $spacing-lg;
+  color: $color-text-white;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -24rpx;
+    left: 0;
+    right: 0;
+    height: 48rpx;
+    background: $color-bg-page;
+    border-radius: 32rpx 32rpx 0 0;
+  }
+}
+
+.headerTitle {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  margin-bottom: 8rpx;
+}
+
+.headerSubtitle {
+  font-size: $font-size-sm;
+  opacity: 0.85;
+}
+
+.content {
+  padding: 0 $page-padding;
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 6rpx;
+    height: 32rpx;
+    background: $color-primary;
+    border-radius: 3rpx;
+  }
+}
+
+.sectionCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  padding: 4rpx 16rpx;
+  background: $color-bg-page;
+  border-radius: $radius-round;
+}
+
+.newsItem {
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-sm;
+  background: $color-bg-page;
+  transition: all $transition-base;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+.newsItemPositive {
+  border-left: 6rpx solid $color-positive;
+}
+
+.newsItemNeutral {
+  border-left: 6rpx solid $color-neutral;
+}
+
+.newsItemPotentialNegative {
+  border-left: 6rpx solid $color-warning;
+}
+
+.newsItemOngoingNegative {
+  border-left: 6rpx solid $color-negative;
+}
+
+.newsTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  line-height: $line-height-normal;
+  @include text-ellipsis-multi(2);
+  margin-bottom: 8rpx;
+}
+
+.newsSummary {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  line-height: $line-height-normal;
+  @include text-ellipsis-multi(2);
+}
+
+.riskItem {
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-sm;
+  background: $color-bg-page;
+  border-left: 6rpx solid $color-warning;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.riskItemHigh {
+  border-left-color: $color-error;
+}
+
+.riskItemMedium {
+  border-left-color: $color-warning;
+}
+
+.riskItemLow {
+  border-left-color: $color-neutral;
+}
+
+.riskHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.riskTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  flex: 1;
+  margin-right: $spacing-sm;
+}
+
+.levelTag {
+  padding: 4rpx 16rpx;
+  border-radius: $radius-round;
+  font-size: 22rpx;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+}
+
+.levelHigh {
+  background: $color-tag-negative;
+  color: $color-error;
+}
+
+.levelMedium {
+  background: $color-tag-warning;
+  color: $color-warning;
+}
+
+.levelLow {
+  background: $color-tag-neutral;
+  color: $color-neutral;
+}
+
+.riskRecommendation {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-sm;
+  margin-top: $spacing-sm;
+}
+
+.recommendationList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recommendation {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  padding: $spacing-sm 0;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  border-bottom: 1rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.recommendationIndex {
+  width: 36rpx;
+  height: 36rpx;
+  background: rgba(30, 86, 160, 0.1);
+  color: $color-primary;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  font-weight: $font-weight-semibold;
+  flex-shrink: 0;
+}
+
+.recommendationText {
+  flex: 1;
+  padding-top: 4rpx;
+}
+
+.emptySection {
+  padding: $spacing-lg;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}

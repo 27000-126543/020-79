@@ -36,6 +36,8 @@ export interface RiskItem {
   isRead: boolean;
   mark?: MarkType;
   markLabel?: string;
+  timeline: TimelineNode[];
+  recommendation: string;
 }
 
 export interface Keyword {
@@ -70,3 +72,20 @@ export interface MarkedRecord {
 }
 
 export type SortMode = 'time' | 'priority';
+
+export type SceneMode = 'meeting' | 'exhibition' | 'store';
+
+export interface TimelineNode {
+  id: string;
+  time: string;
+  type: 'news' | 'risk' | 'action';
+  title: string;
+  detail?: string;
+}
+
+export interface SubscriptionPreset {
+  id: string;
+  name: string;
+  keywordIds: string[];
+  createdAt: string;
+}

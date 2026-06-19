@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode, useMemo } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useMemo, useCallback } from 'react';
 import {
   NewsItem,
   RiskItem,
@@ -6,7 +6,10 @@ import {
   MarkType,
   MarkedRecord,
   SentimentType,
-  SortMode
+  SortMode,
+  SceneMode,
+  SubscriptionPreset,
+  TimelineNode
 } from '@/types';
 import { newsList as initialNewsList } from '@/data/news';
 import { riskList as initialRiskList } from '@/data/risk';
@@ -28,10 +31,12 @@ interface AppContextType {
   markNews: (id: string, markType: MarkType) => void;
   markRisk: (id: string, markType: MarkType) => void;
   toggleKeyword: (id: string) => void;
+  applyKeywordIds: (ids: string[]) => void;
 
   filterNewsByKeywords: (list: NewsItem[]) => NewsItem[];
   filterRisksByKeywords: (list: RiskItem[]) => RiskItem[];
   sortNews: (list: NewsItem[], mode: SortMode) => NewsItem[];
+  sortNewsByScene: (list: NewsItem[], scene: SceneMode) => NewsItem[];
 
   getUnreadRiskCount: () => number;
   getTodayStats: () => { total: number; positive: number; neutral: number; negative: number };
@@ -42,6 +47,22 @@ interface AppContextType {
   };
   getMarkedRecords: (filter?: MarkType | 'all') => MarkedRecord[];
 
+  getBriefing: () => {
+    positiveNews: NewsItem[];
+    neutralNews: NewsItem[];
+    potentialNegativeNews: NewsItem[];
+    ongoingNegativeNews: NewsItem[];
+    activeRisks: RiskItem[];
+    recommendations: string[];
+  };
+
+  getRiskTimeline: (riskId: string) => TimelineNode[];
+
+  presetList: SubscriptionPreset[];
+  savePreset: (name: string) => void;
+  applyPreset: (id: string) => void;
+  deletePreset: (id: string) => void;
+
   newsSentiments: SentimentType[];
 }
 
@@ -51,6 +72,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [newsList, setNewsList] = useState<NewsItem[]>(initialNewsList);
   const [riskList, setRiskList] = useState<RiskItem[]>(initialRiskList);
   const [keywordList, setKeywordList] = useState<Keyword[]>(initialKeywordList);
+  const [presetList, setPresetList] = useState<SubscriptionPreset[]>([]);
 
   const subscribedKeywords = useMemo(
     () => keywordList.filter(k => k.isSubscribed),
@@ -71,40 +93,36 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return result;
   }, [subscribedKeywords]);
 
-  const _doMarkNews = (id: string, markType: MarkType, isReadValue = true) => {
+  const markNews = (id: string, markType: MarkType) => {
     setNewsList(prev =>
       prev.map(n =>
         n.id === id
-          ? {
-              ...n,
-              isRead: isReadValue,
-              mark: markType,
-              markLabel: MARK_LABELS[markType]
-            }
+          ? { ...n, isRead: true, mark: markType, markLabel: MARK_LABELS[markType] }
           : n
       )
     );
-    console.log(`[AppContext] 标记新闻 ${id}: ${markType}`);
-  };
-
-  const markNews = (id: string, markType: MarkType) => {
-    _doMarkNews(id, markType, true);
   };
 
   const markRisk = (id: string, markType: MarkType) => {
     setRiskList(prev =>
-      prev.map(r =>
-        r.id === id
-          ? {
-              ...r,
-              isRead: true,
-              mark: markType,
-              markLabel: MARK_LABELS[markType]
-            }
-          : r
-      )
+      prev.map(r => {
+        if (r.id !== id) return r;
+        const actionNode: TimelineNode = {
+          id: `${r.id}-act-${Date.now()}`,
+          time: new Date().toLocaleString('zh-CN', { hour12: false }).replace(/\//g, '-'),
+          type: 'action',
+          title: `处置: ${MARK_LABELS[markType]}`,
+          detail: markType === 'headquarters' ? '已提交总部回应' : markType === 'region' ? '已转交区域核实' : '已标记已读'
+        };
+        return {
+          ...r,
+          isRead: true,
+          mark: markType,
+          markLabel: MARK_LABELS[markType],
+          timeline: [...r.timeline, actionNode]
+        };
+      })
     );
-    console.log(`[AppContext] 标记风险 ${id}: ${markType}`);
   };
 
   const toggleKeyword = (id: string) => {
@@ -112,6 +130,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       prev.map(kw => (kw.id === id ? { ...kw, isSubscribed: !kw.isSubscribed } : kw))
     );
   };
+
+  const applyKeywordIds = useCallback((ids: string[]) => {
+    setKeywordList(prev =>
+      prev.map(kw => ({ ...kw, isSubscribed: ids.includes(kw.id) }))
+    );
+  }, []);
 
   const _matchKeywords = (itemKeywords: string[]): boolean => {
     if (subscribedKeywordNames.length === 0) return true;
@@ -154,6 +178,32 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return [...list].sort((a, b) => priorityScore(b) - priorityScore(a));
   };
 
+  const sortNewsByScene = (list: NewsItem[], scene: SceneMode): NewsItem[] => {
+    const sceneScore = (n: NewsItem): number => {
+      let score = 0;
+      if (!n.isRead) score += 60;
+      const kw = n.keywords;
+      if (scene === 'meeting') {
+        if (n.sentiment === 'positive') score += 80;
+        if (kw.some(k => ['竞品对比', '竞品动态'].includes(k))) score += 70;
+        if (kw.some(k => ['销量', '战略合作', '新品上市'].includes(k))) score += 60;
+        if (n.sentiment === 'negative') score += 30;
+      } else if (scene === 'exhibition') {
+        if (n.sentiment === 'positive') score += 70;
+        if (kw.some(k => ['新品上市', '战略合作', '行业报告'].includes(k))) score += 80;
+        if (kw.some(k => ['竞品对比', '竞品动态'].includes(k))) score += 50;
+      } else {
+        if (n.sentiment === 'negative') score += 90;
+        if (kw.some(k => ['投诉', '质量问题', '召回', '卫生', '变质'].includes(k))) score += 70;
+        if (n.stores.length > 0) score += 50;
+        if (kw.some(k => ['华东', '北京', '华南', '区域'].includes(k))) score += 40;
+        if (n.sentiment === 'positive') score += 20;
+      }
+      return score;
+    };
+    return [...list].sort((a, b) => sceneScore(b) - sceneScore(a));
+  };
+
   const getUnreadRiskCount = () => riskList.filter(r => !r.isRead).length;
 
   const getTodayStats = () => {
@@ -171,23 +221,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const getMarkStats = () => {
     const newsStats = { read: 0, headquarters: 0, region: 0 };
     newsList.forEach(n => {
-      if (n.mark === 'headquarters') {
-        newsStats.headquarters++;
-      } else if (n.mark === 'region') {
-        newsStats.region++;
-      } else if (n.mark === 'read') {
-        newsStats.read++;
-      }
+      if (n.mark === 'headquarters') newsStats.headquarters++;
+      else if (n.mark === 'region') newsStats.region++;
+      else if (n.mark === 'read') newsStats.read++;
     });
     const riskStats = { read: 0, headquarters: 0, region: 0 };
     riskList.forEach(r => {
-      if (r.mark === 'headquarters') {
-        riskStats.headquarters++;
-      } else if (r.mark === 'region') {
-        riskStats.region++;
-      } else if (r.mark === 'read') {
-        riskStats.read++;
-      }
+      if (r.mark === 'headquarters') riskStats.headquarters++;
+      else if (r.mark === 'region') riskStats.region++;
+      else if (r.mark === 'read') riskStats.read++;
     });
     return {
       news: newsStats,
@@ -242,6 +284,58 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     );
   };
 
+  const getBriefing = () => {
+    const filtered = filterNewsByKeywords(newsList);
+    const filteredRisks = filterRisksByKeywords(riskList);
+    const positiveNews = filtered.filter(n => n.sentiment === 'positive');
+    const neutralNews = filtered.filter(n => n.sentiment === 'neutral');
+    const potentialNegativeNews = filtered.filter(
+      n => n.sentiment === 'negative' && n.sentimentLabel === '潜在负面'
+    );
+    const ongoingNegativeNews = filtered.filter(
+      n => n.sentiment === 'negative' && n.sentimentLabel === '持续发酵'
+    );
+    const activeRisks = filteredRisks.filter(r => !r.mark || r.mark === 'read');
+    const recommendations: string[] = [];
+    activeRisks.forEach(r => {
+      if (r.recommendation) recommendations.push(r.recommendation);
+    });
+    return { positiveNews, neutralNews, potentialNegativeNews, ongoingNegativeNews, activeRisks, recommendations };
+  };
+
+  const getRiskTimeline = (riskId: string): TimelineNode[] => {
+    const risk = riskList.find(r => r.id === riskId);
+    return risk ? risk.timeline : [];
+  };
+
+  const savePreset = useCallback((name: string) => {
+    setKeywordList(prev => {
+      const currentIds = prev.filter(k => k.isSubscribed).map(k => k.id);
+      setPresetList(pp => [
+        ...pp,
+        {
+          id: `preset-${Date.now()}`,
+          name,
+          keywordIds: currentIds,
+          createdAt: new Date().toLocaleString('zh-CN', { hour12: false })
+        }
+      ]);
+      return prev;
+    });
+  }, []);
+
+  const applyPreset = useCallback((id: string) => {
+    const target = presetList.find(p => p.id === id);
+    if (!target) return;
+    setKeywordList(prev =>
+      prev.map(kw => ({ ...kw, isSubscribed: target.keywordIds.includes(kw.id) }))
+    );
+  }, [presetList]);
+
+  const deletePreset = useCallback((id: string) => {
+    setPresetList(prev => prev.filter(p => p.id !== id));
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
@@ -253,13 +347,21 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         markNews,
         markRisk,
         toggleKeyword,
+        applyKeywordIds,
         filterNewsByKeywords,
         filterRisksByKeywords,
         sortNews,
+        sortNewsByScene,
         getUnreadRiskCount,
         getTodayStats,
         getMarkStats,
         getMarkedRecords,
+        getBriefing,
+        getRiskTimeline,
+        presetList,
+        savePreset,
+        applyPreset,
+        deletePreset,
         newsSentiments: ['positive', 'neutral', 'negative']
       }}
     >

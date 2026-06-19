@@ -254,3 +254,85 @@
   background: rgba(30, 86, 160, 0.08) !important;
   color: $color-primary;
 }
+
+.presetSection {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.saveRow {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.saveInput {
+  flex: 1;
+  height: 72rpx;
+  padding: 0 $spacing-md;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  background: $color-bg-page;
+}
+
+.saveBtn {
+  padding: 0 $spacing-lg;
+  height: 72rpx;
+  line-height: 72rpx;
+  background: $color-primary;
+  color: $color-text-white;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  &:active { opacity: 0.85; }
+}
+
+.presetList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.presetItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+}
+
+.presetInfo {
+  flex: 1;
+  &:active { opacity: 0.8; }
+}
+
+.presetName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-right: $spacing-sm;
+}
+
+.presetCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.presetDel {
+  padding: 8rpx 16rpx;
+  color: $color-text-tertiary;
+  font-size: $font-size-xs;
+  &:active { color: $color-error; }
+}
+
+.presetEmpty {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  line-height: 1.6;
+}

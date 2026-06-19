@@ -1,12 +1,15 @@
-import React, { useMemo, useCallback } from 'react';
-import { View, Text, ScrollView } from '@tarojs/components';
+import React, { useMemo, useCallback, useState } from 'react';
+import { View, Text, ScrollView, Input } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import { useAppContext } from '@/store/app-context';
 
 const MinePage: React.FC = () => {
-  const { keywordList, toggleKeyword, getMarkStats, getMarkedRecords } = useAppContext();
+  const { keywordList, toggleKeyword, getMarkStats, getMarkedRecords, presetList, savePreset, applyPreset, deletePreset } = useAppContext();
+
+  const [showSaveInput, setShowSaveInput] = useState(false);
+  const [presetName, setPresetName] = useState('');
 
   const markStats = useMemo(() => getMarkStats().total, [getMarkStats]);
 
@@ -94,6 +97,72 @@ const MinePage: React.FC = () => {
             <Text className={styles.label}>交区域核实</Text>
           </View>
         </View>
+      </View>
+
+      <View className={styles.presetSection}>
+        <View className={styles.sectionHeader}>
+          <View className={styles.sectionTitle}>
+            <View className={styles.sectionIcon} />
+            <Text>订阅方案</Text>
+          </View>
+          <Text
+            className={styles.sectionAction}
+            onClick={() => setShowSaveInput(!showSaveInput)}
+          >
+            {showSaveInput ? '取消' : '保存当前'}
+          </Text>
+        </View>
+
+        {showSaveInput && (
+          <View className={styles.saveRow}>
+            <Input
+              className={styles.saveInput}
+              placeholder="输入方案名称，如：华东质量"
+              value={presetName}
+              onInput={(e) => setPresetName((e as any).detail.value || '')}
+            />
+            <View
+              className={styles.saveBtn}
+              onClick={() => {
+                if (presetName.trim()) {
+                  savePreset(presetName.trim());
+                  setPresetName('');
+                  setShowSaveInput(false);
+                  Taro.showToast({ title: '方案已保存', icon: 'success' });
+                }
+              }}
+            >
+              保存
+            </View>
+          </View>
+        )}
+
+        {presetList.length > 0 ? (
+          <View className={styles.presetList}>
+            {presetList.map(p => (
+              <View key={p.id} className={styles.presetItem}>
+                <View className={styles.presetInfo} onClick={() => {
+                  applyPreset(p.id);
+                  Taro.showToast({ title: `已切换到"${p.name}"`, icon: 'success' });
+                }}>
+                  <Text className={styles.presetName}>{p.name}</Text>
+                  <Text className={styles.presetCount}>{p.keywordIds.length}个关键词</Text>
+                </View>
+                <View
+                  className={styles.presetDel}
+                  onClick={() => {
+                    deletePreset(p.id);
+                    Taro.showToast({ title: '已删除', icon: 'success' });
+                  }}
+                >
+                  ✕
+                </View>
+              </View>
+            ))}
+          </View>
+        ) : (
+          <Text className={styles.presetEmpty}>暂无保存的方案，可点击"保存当前"将当前订阅组合存为方案</Text>
+        )}
       </View>
 
       <View className={styles.section}>

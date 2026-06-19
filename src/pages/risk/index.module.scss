@@ -255,6 +255,24 @@
   margin-bottom: $spacing-md;
 }
 
+.relatedRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.relatedLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.relatedLink {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
 .keywordTag {
   padding: 4rpx 14rpx;
   background: $color-bg-page;

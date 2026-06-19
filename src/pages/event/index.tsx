@@ -89,9 +89,17 @@ const EventPage: React.FC = () => {
             <Text className={styles.greeting}>今日舆情概览</Text>
             <Text className={styles.date}>2024年1月15日 · 星期一</Text>
           </View>
-          <View className={styles.refreshBtn}>
-            <Text>●</Text>
-            <Text>实时更新</Text>
+          <View className={styles.headerActions}>
+            <View
+              className={styles.briefingBtn}
+              onClick={() => Taro.navigateTo({ url: '/pages/briefing/index' })}
+            >
+              <Text>📋 简报</Text>
+            </View>
+            <View className={styles.refreshBtn}>
+              <Text>●</Text>
+              <Text>实时更新</Text>
+            </View>
           </View>
         </View>
         <Text className={styles.statsTitle}>今日新增报道（基于订阅关键词）</Text>

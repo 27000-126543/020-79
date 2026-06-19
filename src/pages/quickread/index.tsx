@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import SentimentTag from '@/components/SentimentTag';
 import SubscriptionBar from '@/components/SubscriptionBar';
 import { useAppContext } from '@/store/app-context';
-import { SentimentType, MarkType, SortMode, NewsItem } from '@/types';
+import { SentimentType, MarkType, SortMode, SceneMode, NewsItem } from '@/types';
 
 type FilterType = 'all' | SentimentType;
 
@@ -16,11 +16,13 @@ const QuickReadPage: React.FC = () => {
     markNews,
     filterNewsByKeywords,
     sortNews,
+    sortNewsByScene,
     subscribedKeywordNames
   } = useAppContext();
 
   const [filter, setFilter] = useState<FilterType>('all');
   const [sortMode, setSortMode] = useState<SortMode>('priority');
+  const [sceneMode, setSceneMode] = useState<SceneMode>('meeting');
 
   const baseList = useMemo(
     () => filterNewsByKeywords(newsList),
@@ -30,8 +32,9 @@ const QuickReadPage: React.FC = () => {
   const filteredList = useMemo(() => {
     let list = baseList;
     if (filter !== 'all') list = list.filter(n => n.sentiment === filter);
-    return sortNews(list, sortMode);
-  }, [baseList, filter, sortMode, sortNews]);
+    if (sortMode === 'time') return sortNews(list, 'time');
+    return sortNewsByScene(list, sceneMode);
+  }, [baseList, filter, sortMode, sortNews, sortNewsByScene, sceneMode]);
 
   const counts = useMemo(() => {
     const total = baseList.length;
@@ -130,6 +133,22 @@ const QuickReadPage: React.FC = () => {
             <Text>按时间</Text>
           </View>
         </View>
+
+        <View className={styles.sceneSwitch}>
+          {([
+            { key: 'meeting' as SceneMode, label: '🤝 客户会谈' },
+            { key: 'exhibition' as SceneMode, label: '🎪 展会巡场' },
+            { key: 'store' as SceneMode, label: '🏪 门店事件' }
+          ]).map(s => (
+            <View
+              key={s.key}
+              className={classnames(styles.sceneTag, sceneMode === s.key && styles.sceneActive)}
+              onClick={() => setSceneMode(s.key)}
+            >
+              <Text>{s.label}</Text>
+            </View>
+          ))}
+        </View>
       </View>
 
       <View className={styles.subscriptionWrap}>
@@ -140,7 +159,9 @@ const QuickReadPage: React.FC = () => {
         <View className={styles.sortHint}>
           <View className={styles.dot} />
           <Text>
-            今日重点：未读 {counts.unread} 条 · 潜在负面和竞品对比已优先
+            {sceneMode === 'meeting' && '已优先展示正面素材与竞品动态'}
+            {sceneMode === 'exhibition' && '已优先展示新品发布与行业趋势'}
+            {sceneMode === 'store' && '已优先展示风险预警与区域动态'}
           </Text>
         </View>
       )}

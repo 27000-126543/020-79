@@ -386,3 +386,34 @@
     background: $color-error;
   }
 }
+
+.sceneSwitch {
+  margin-top: $spacing-sm;
+  display: flex;
+  gap: $spacing-sm;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 4rpx;
+}
+
+.sceneTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 12rpx 28rpx;
+  background: $color-bg-page;
+  border-radius: $radius-round;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+  transition: all $transition-base;
+  border: 2rpx solid transparent;
+
+  &.sceneActive {
+    background: rgba(30, 86, 160, 0.08);
+    color: $color-primary;
+    border-color: rgba(30, 86, 160, 0.3);
+    font-weight: $font-weight-medium;
+  }
+
+  &:active { transform: scale(0.96); }
+}
