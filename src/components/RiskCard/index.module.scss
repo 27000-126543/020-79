@@ -1,0 +1,132 @@
+@use '@/styles/variables.scss' as *;
+
+.riskCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+  border-left: 6rpx solid transparent;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  .cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-sm;
+  }
+
+  .levelBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4rpx 16rpx;
+    border-radius: $radius-xs;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+  }
+
+  .high {
+    background: $color-tag-negative;
+    color: $color-error;
+  }
+
+  .medium {
+    background: $color-tag-warning;
+    color: $color-warning;
+  }
+
+  .low {
+    background: $color-tag-neutral;
+    color: $color-text-secondary;
+  }
+
+  .trendTag {
+    display: inline-flex;
+    align-items: center;
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+
+    .trendIcon {
+      margin-right: 4rpx;
+    }
+
+    &.up {
+      color: $color-error;
+    }
+
+    &.down {
+      color: $color-success;
+    }
+  }
+
+  .title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    line-height: 1.4;
+    margin-bottom: $spacing-sm;
+  }
+
+  .changeType {
+    font-size: $font-size-xs;
+    color: $color-primary;
+    background: rgba(30, 86, 160, 0.08);
+    padding: 4rpx 12rpx;
+    border-radius: $radius-xs;
+    display: inline-block;
+    margin-bottom: $spacing-sm;
+  }
+
+  .description {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.6;
+    margin-bottom: $spacing-md;
+  }
+
+  .cardFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .newsCount {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+
+    .count {
+      color: $color-primary;
+      font-weight: $font-weight-semibold;
+    }
+  }
+
+  .updateTime {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+  }
+
+  &.highLevel {
+    border-left-color: $color-error;
+  }
+
+  &.mediumLevel {
+    border-left-color: $color-warning;
+  }
+
+  &.lowLevel {
+    border-left-color: $color-neutral;
+  }
+
+  &.isRead {
+    opacity: 0.7;
+
+    .title {
+      color: $color-text-secondary;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+@use '@/styles/variables.scss' as *;
+
+.sentimentTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rpx 16rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+}
+
+.positive {
+  background-color: $color-tag-positive;
+  color: $color-success;
+}
+
+.neutral {
+  background-color: $color-tag-neutral;
+  color: $color-text-secondary;
+}
+
+.negative {
+  background-color: $color-tag-negative;
+  color: $color-error;
+}

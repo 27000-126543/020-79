@@ -1,0 +1,270 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 140rpx;
+}
+
+.pageHeader {
+  background: $color-bg-card;
+  padding: $spacing-lg $page-padding;
+  margin-bottom: $spacing-md;
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+
+  .title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+  }
+
+  .aiBadge {
+    padding: 4rpx 16rpx;
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+    color: $color-text-white;
+    border-radius: $radius-round;
+    font-size: 20rpx;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.headerDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.filterBar {
+  display: flex;
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-md;
+  gap: $spacing-sm;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.filterTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 12rpx 28rpx;
+  background: $color-bg-card;
+  border-radius: $radius-round;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  box-shadow: $shadow-card;
+  flex-shrink: 0;
+  transition: all $transition-base;
+
+  &.active {
+    background: $color-primary;
+    color: $color-text-white;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.listContainer {
+  padding: 0 $page-padding;
+}
+
+.summaryCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.95;
+  }
+
+  &.isRead {
+    opacity: 0.7;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.sourceInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.source {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.time {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.summaryTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  line-height: 1.4;
+  margin-bottom: $spacing-md;
+}
+
+.summarySection {
+  margin-bottom: $spacing-md;
+
+  .sectionLabel {
+    display: flex;
+    align-items: center;
+    gap: 8rpx;
+    font-size: $font-size-xs;
+    color: $color-primary;
+    font-weight: $font-weight-medium;
+    margin-bottom: $spacing-sm;
+
+    .labelIcon {
+      width: 6rpx;
+      height: 24rpx;
+      background: $color-primary;
+      border-radius: 3rpx;
+    }
+  }
+
+  .sectionContent {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.6;
+    background: $color-bg-page;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+  }
+}
+
+.tagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-sm;
+}
+
+.tagItem {
+  padding: 6rpx 16rpx;
+  background: rgba(30, 86, 160, 0.08);
+  color: $color-primary;
+  border-radius: $radius-xs;
+  font-size: 22rpx;
+}
+
+.quotesList {
+  .quoteItem {
+    position: relative;
+    padding-left: $spacing-md;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.6;
+    margin-bottom: $spacing-sm;
+
+    &::before {
+      content: '"';
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 36rpx;
+      color: $color-primary;
+      line-height: 1;
+      font-family: serif;
+    }
+
+    .quoteSource {
+      display: block;
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+      margin-top: 4rpx;
+    }
+  }
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+  margin-top: $spacing-sm;
+}
+
+.footerLeft {
+  display: flex;
+  gap: $spacing-sm;
+  flex: 1;
+}
+
+.actionBtn {
+  flex: 1;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-button;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.94);
+  }
+}
+
+.btnRead {
+  background: $color-bg-hover;
+  color: $color-text-secondary;
+}
+
+.btnHQ {
+  background: $color-tag-warning;
+  color: $color-warning;
+}
+
+.btnRegion {
+  background: rgba(30, 86, 160, 0.1);
+  color: $color-primary;
+}
+
+.detailLink {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.emptyState {
+  padding: 120rpx 0;
+  text-align: center;
+
+  .emptyText {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+  }
+}
+
+.bottomTip {
+  text-align: center;
+  padding: $spacing-md 0;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}

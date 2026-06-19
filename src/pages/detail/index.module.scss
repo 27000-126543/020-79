@@ -1,0 +1,292 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 140rpx;
+}
+
+.articleHeader {
+  background: $color-bg-card;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  line-height: 1.4;
+  margin-bottom: $spacing-md;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.metaLeft {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.source {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.publishTime {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.sentimentTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6rpx 20rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.positive {
+  background: $color-tag-positive;
+  color: $color-success;
+}
+
+.neutral {
+  background: $color-tag-neutral;
+  color: $color-text-secondary;
+}
+
+.negative {
+  background: $color-tag-negative;
+  color: $color-error;
+}
+
+.aiSummary {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.summaryHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-md;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.aiBadge {
+  padding: 6rpx 20rpx;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.summaryLabel {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.summarySection {
+  margin-bottom: $spacing-md;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .sectionTitle {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+    display: flex;
+    align-items: center;
+    gap: 8rpx;
+
+    .dot {
+      width: 8rpx;
+      height: 8rpx;
+      background: $color-primary;
+      border-radius: 50%;
+    }
+  }
+
+  .sectionContent {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.7;
+    padding-left: 16rpx;
+  }
+}
+
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+  padding-left: 16rpx;
+}
+
+.tagItem {
+  padding: 8rpx 20rpx;
+  background: rgba(30, 86, 160, 0.08);
+  color: $color-primary;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+}
+
+.quotesList {
+  padding-left: 16rpx;
+
+  .quoteItem {
+    position: relative;
+    padding: $spacing-sm $spacing-md;
+    background: $color-bg-page;
+    border-radius: $radius-md;
+    margin-bottom: $spacing-sm;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.6;
+
+    &::before {
+      content: '"';
+      position: absolute;
+      left: 8rpx;
+      top: 0;
+      font-size: 32rpx;
+      color: $color-primary;
+      line-height: 1;
+      font-family: serif;
+    }
+
+    .quoteSource {
+      display: block;
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+      margin-top: 6rpx;
+      text-align: right;
+    }
+  }
+}
+
+.articleContent {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.contentTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.contentText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.06);
+  display: flex;
+  gap: $spacing-sm;
+  z-index: 100;
+}
+
+.actionBtn {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+}
+
+.btnRead {
+  background: $color-bg-hover;
+  color: $color-text-secondary;
+}
+
+.btnHQ {
+  background: $color-tag-warning;
+  color: $color-warning;
+}
+
+.btnRegion {
+  background: $color-primary;
+  color: $color-text-white;
+}
+
+.markedBadge {
+  position: absolute;
+  top: $spacing-lg;
+  right: $spacing-lg;
+  padding: 6rpx 20rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.keywordsSection {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.keywordsTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.keywordsTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.keywordTag {
+  padding: 8rpx 20rpx;
+  background: $color-bg-page;
+  color: $color-text-secondary;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+}
