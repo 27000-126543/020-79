@@ -2,6 +2,8 @@ export type SentimentType = 'positive' | 'neutral' | 'negative';
 
 export type MarkType = 'read' | 'headquarters' | 'region';
 
+export type MarkCategory = 'news' | 'risk';
+
 export interface NewsItem {
   id: string;
   title: string;
@@ -32,6 +34,8 @@ export interface RiskItem {
   keywords: string[];
   relatedNews: string[];
   isRead: boolean;
+  mark?: MarkType;
+  markLabel?: string;
 }
 
 export interface Keyword {
@@ -49,3 +53,20 @@ export interface DailyStats {
   negative: number;
   date: string;
 }
+
+export interface MarkedRecord {
+  id: string;
+  category: MarkCategory;
+  title: string;
+  source?: string;
+  time: string;
+  mark: MarkType;
+  markLabel: string;
+  level?: RiskItem['level'];
+  sentiment?: SentimentType;
+  sentimentLabel?: string;
+  keywords: string[];
+  summary?: string;
+}
+
+export type SortMode = 'time' | 'priority';

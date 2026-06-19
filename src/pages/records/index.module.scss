@@ -1,0 +1,287 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 40rpx;
+}
+
+.header {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  padding: $spacing-lg $page-padding $spacing-xl;
+  color: $color-text-white;
+}
+
+.headerTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  margin-bottom: 4rpx;
+}
+
+.headerDesc {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+}
+
+.statsRow {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-lg;
+}
+
+.statCard {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-xs;
+  text-align: center;
+
+  .num {
+    font-size: 36rpx;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    margin-bottom: 4rpx;
+  }
+  .lbl {
+    font-size: 22rpx;
+    opacity: 0.95;
+  }
+}
+
+.content {
+  padding: 0 $page-padding;
+  margin-top: -24rpx;
+}
+
+.filterTabs {
+  display: flex;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: 8rpx;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.tabItem {
+  flex: 1;
+  padding: 18rpx 0;
+  text-align: center;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+
+  &.active {
+    background: $color-primary;
+    color: $color-text-white;
+    font-weight: $font-weight-semibold;
+    box-shadow: 0 2rpx 8rpx rgba(30, 86, 160, 0.25);
+  }
+
+  .cnt {
+    font-size: 22rpx;
+    margin-left: 6rpx;
+    opacity: 0.85;
+  }
+}
+
+.categoryBar {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.catTag {
+  padding: 12rpx 24rpx;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.04);
+  transition: all $transition-base;
+  &.active {
+    background: rgba(30, 86, 160, 0.08);
+    color: $color-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.listHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+  padding: 0 4rpx;
+
+  .title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+  .count {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+  }
+}
+
+.recordCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  border-left: 6rpx solid transparent;
+  transition: all $transition-base;
+
+  &:active { transform: scale(0.98); opacity: 0.96; }
+
+  &.cardNews { border-left-color: $color-primary; }
+  &.cardRisk { border-left-color: $color-warning; }
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+}
+
+.cardType {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 16rpx;
+  border-radius: $radius-xs;
+  font-size: 22rpx;
+  font-weight: $font-weight-semibold;
+
+  &.typeNews {
+    background: rgba(30, 86, 160, 0.1);
+    color: $color-primary;
+  }
+  &.typeRisk {
+    background: $color-tag-warning;
+    color: $color-warning;
+  }
+}
+
+.cardMark {
+  padding: 6rpx 16rpx;
+  border-radius: $radius-xs;
+  font-size: 22rpx;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+
+  &.markRead { background: $color-tag-neutral; color: $color-text-tertiary; }
+  &.markHQ { background: $color-tag-warning; color: $color-warning; }
+  &.markRegion { background: rgba(30, 86, 160, 0.1); color: $color-primary; }
+}
+
+.cardTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  line-height: 1.45;
+  margin-bottom: $spacing-sm;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.sentimentTag {
+  padding: 4rpx 14rpx;
+  border-radius: $radius-xs;
+  font-size: 22rpx;
+  font-weight: $font-weight-medium;
+  &.positive { background: $color-tag-positive; color: $color-success; }
+  &.neutral { background: $color-tag-neutral; color: $color-text-secondary; }
+  &.negative { background: $color-tag-negative; color: $color-error; }
+}
+
+.levelTag {
+  padding: 4rpx 14rpx;
+  border-radius: $radius-xs;
+  font-size: 22rpx;
+  font-weight: $font-weight-medium;
+  &.high { background: $color-tag-negative; color: $color-error; }
+  &.medium { background: $color-tag-warning; color: $color-warning; }
+  &.low { background: $color-tag-neutral; color: $color-text-secondary; }
+}
+
+.sourceTxt {
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+}
+
+.timeTxt {
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+}
+
+.summaryTxt {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.6;
+  margin-bottom: $spacing-md;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.kwWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-bottom: $spacing-sm;
+}
+
+.kw {
+  padding: 4rpx 14rpx;
+  background: $color-bg-page;
+  border-radius: $radius-xs;
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: $spacing-sm;
+  border-top: 1rpx solid $color-divider;
+}
+
+.viewLink {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.emptyState {
+  padding: 120rpx 40rpx;
+  text-align: center;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+
+  .icon { font-size: 80rpx; margin-bottom: $spacing-md; }
+  .t {
+    font-size: $font-size-md;
+    color: $color-text-primary;
+    margin-bottom: 8rpx;
+    font-weight: $font-weight-semibold;
+  }
+  .d { font-size: $font-size-sm; color: $color-text-tertiary; line-height: 1.6; }
+}

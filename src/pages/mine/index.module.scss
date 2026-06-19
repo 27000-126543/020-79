@@ -241,3 +241,16 @@
   border-radius: $radius-round;
   margin-right: 8rpx;
 }
+
+.menuHighlight {
+  background: rgba(30, 86, 160, 0.03);
+
+  &:active {
+    background: rgba(30, 86, 160, 0.06);
+  }
+}
+
+.menuIconHighlight {
+  background: rgba(30, 86, 160, 0.08) !important;
+  color: $color-primary;
+}

@@ -4,7 +4,8 @@ export default defineAppConfig({
     'pages/quickread/index',
     'pages/risk/index',
     'pages/mine/index',
-    'pages/detail/index'
+    'pages/detail/index',
+    'pages/records/index'
   ],
   window: {
     backgroundTextStyle: 'light',

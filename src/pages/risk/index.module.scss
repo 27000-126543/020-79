@@ -12,10 +12,28 @@
   color: $color-text-white;
 }
 
+.headerRow1 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: $spacing-xs;
+}
+
 .headerTitle {
   font-size: $font-size-xl;
   font-weight: $font-weight-bold;
-  margin-bottom: $spacing-xs;
+}
+
+.recordsLink {
+  padding: 8rpx 20rpx;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  transition: all $transition-base;
+  &:active { opacity: 0.8; transform: scale(0.96); }
 }
 
 .headerDesc {
@@ -33,7 +51,7 @@
   flex: 1;
   background: rgba(255, 255, 255, 0.15);
   border-radius: $radius-md;
-  padding: $spacing-md;
+  padding: $spacing-md $spacing-xs;
   text-align: center;
 
   .number {
@@ -42,16 +60,44 @@
     line-height: 1.2;
     margin-bottom: 4rpx;
   }
-
   .label {
     font-size: 22rpx;
     opacity: 0.9;
   }
 }
 
+.markRow {
+  margin-top: $spacing-md;
+  display: flex;
+  gap: $spacing-sm;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.15);
+
+  .item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8rpx;
+    padding: 10rpx 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: $radius-sm;
+    font-size: 22rpx;
+    .num {
+      font-weight: $font-weight-semibold;
+    }
+    &.hq .num { color: #FFE0B2; }
+    &.rg .num { color: #BBDEFB; }
+  }
+}
+
 .content {
   padding: 0 $page-padding;
   margin-top: -24rpx;
+}
+
+.subscriptionArea {
+  margin-bottom: $spacing-md;
 }
 
 .filterBar {
@@ -75,18 +121,13 @@
   &.active {
     background: $color-bg-hover;
     color: $color-text-primary;
-    font-weight: $font-weight-medium;
+    font-weight: $font-weight-semibold;
   }
-
   .count {
     font-size: $font-size-xs;
     margin-left: 6rpx;
     opacity: 0.7;
   }
-}
-
-.listContainer {
-  //
 }
 
 .listHeader {
@@ -101,7 +142,6 @@
     font-weight: $font-weight-semibold;
     color: $color-text-primary;
   }
-
   .markAll {
     font-size: $font-size-xs;
     color: $color-primary;
@@ -117,26 +157,12 @@
   border-left: 8rpx solid transparent;
   transition: all $transition-base;
 
-  &:active {
-    transform: scale(0.98);
-    opacity: 0.95;
-  }
+  &:active { transform: scale(0.98); opacity: 0.96; }
 
-  &.highLevel {
-    border-left-color: $color-error;
-  }
-
-  &.mediumLevel {
-    border-left-color: $color-warning;
-  }
-
-  &.lowLevel {
-    border-left-color: $color-neutral;
-  }
-
-  &.isRead {
-    opacity: 0.7;
-  }
+  &.highLevel { border-left-color: $color-error; }
+  &.mediumLevel { border-left-color: $color-warning; }
+  &.lowLevel { border-left-color: $color-neutral; }
+  &.isRead { opacity: 0.75; }
 }
 
 .cardHeader {
@@ -144,6 +170,12 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: $spacing-sm;
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
 }
 
 .levelBadge {
@@ -155,20 +187,9 @@
   font-weight: $font-weight-semibold;
 }
 
-.high {
-  background: $color-tag-negative;
-  color: $color-error;
-}
-
-.medium {
-  background: $color-tag-warning;
-  color: $color-warning;
-}
-
-.low {
-  background: $color-tag-neutral;
-  color: $color-text-secondary;
-}
+.high { background: $color-tag-negative; color: $color-error; }
+.medium { background: $color-tag-warning; color: $color-warning; }
+.low { background: $color-tag-neutral; color: $color-text-secondary; }
 
 .trendBadge {
   display: inline-flex;
@@ -178,20 +199,20 @@
   padding: 4rpx 12rpx;
   border-radius: $radius-xs;
 
-  &.up {
-    background: $color-tag-negative;
-    color: $color-error;
-  }
+  &.up { background: $color-tag-negative; color: $color-error; }
+  &.down { background: $color-tag-positive; color: $color-success; }
+  &.stable { background: $color-tag-neutral; color: $color-text-secondary; }
+}
 
-  &.down {
-    background: $color-tag-positive;
-    color: $color-success;
-  }
+.markTag {
+  padding: 6rpx 16rpx;
+  border-radius: $radius-xs;
+  font-size: 22rpx;
+  font-weight: $font-weight-medium;
 
-  &.stable {
-    background: $color-tag-neutral;
-    color: $color-text-secondary;
-  }
+  &.markRead { background: $color-tag-neutral; color: $color-text-tertiary; }
+  &.markHQ { background: $color-tag-warning; color: $color-warning; }
+  &.markRegion { background: rgba(30, 86, 160, 0.1); color: $color-primary; }
 }
 
 .riskTitle {
@@ -200,6 +221,10 @@
   color: $color-text-primary;
   line-height: 1.4;
   margin-bottom: $spacing-sm;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .changeType {
@@ -217,6 +242,10 @@
   color: $color-text-secondary;
   line-height: 1.6;
   margin-bottom: $spacing-md;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .keywordsRow {
@@ -240,6 +269,8 @@
   justify-content: space-between;
   padding-top: $spacing-sm;
   border-top: 1rpx solid $color-divider;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
 }
 
 .footerLeft {
@@ -253,7 +284,6 @@
   align-items: center;
   font-size: $font-size-xs;
   color: $color-text-tertiary;
-
   .num {
     color: $color-primary;
     font-weight: $font-weight-semibold;
@@ -266,44 +296,21 @@
   color: $color-text-tertiary;
 }
 
-.actionBtn {
-  padding: 8rpx 24rpx;
-  background: $color-primary;
-  color: $color-text-white;
-  border-radius: $radius-button;
-  font-size: $font-size-xs;
-  font-weight: $font-weight-medium;
-
-  &:active {
-    opacity: 0.9;
-    transform: scale(0.96);
-  }
-
-  &.btnRead {
-    background: $color-bg-hover;
-    color: $color-text-secondary;
-  }
+.actionRow {
+  display: flex;
+  gap: $spacing-xs;
 }
 
-.emptyState {
-  padding: 120rpx 0;
-  text-align: center;
+.miniBtn {
+  padding: 8rpx 20rpx;
+  border-radius: $radius-button;
+  font-size: 22rpx;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+  &:active { transform: scale(0.94); opacity: 0.85; }
 
-  .emptyIcon {
-    font-size: 80rpx;
-    margin-bottom: $spacing-md;
-  }
-
-  .emptyTitle {
-    font-size: $font-size-md;
-    color: $color-text-primary;
-    margin-bottom: $spacing-xs;
-  }
-
-  .emptyDesc {
-    font-size: $font-size-sm;
-    color: $color-text-tertiary;
-  }
+  &.btnHQ { background: $color-tag-warning; color: $color-warning; }
+  &.btnRegion { background: rgba(30, 86, 160, 0.1); color: $color-primary; }
 }
 
 .unreadDot {
@@ -314,4 +321,20 @@
   display: inline-block;
   margin-right: 8rpx;
   vertical-align: middle;
+}
+
+.emptyState {
+  padding: 120rpx 40rpx;
+  text-align: center;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+
+  .emptyIcon { font-size: 80rpx; margin-bottom: $spacing-md; }
+  .emptyTitle {
+    font-size: $font-size-md;
+    color: $color-text-primary;
+    margin-bottom: 8rpx;
+    font-weight: $font-weight-semibold;
+  }
+  .emptyDesc { font-size: $font-size-sm; color: $color-text-tertiary; line-height: 1.6; }
 }

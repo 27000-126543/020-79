@@ -4,91 +4,200 @@ import Taro, { usePullDownRefresh } from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import SentimentTag from '@/components/SentimentTag';
+import SubscriptionBar from '@/components/SubscriptionBar';
 import { useAppContext } from '@/store/app-context';
-import { SentimentType, MarkType } from '@/types';
+import { SentimentType, MarkType, SortMode, NewsItem } from '@/types';
 
 type FilterType = 'all' | SentimentType;
 
 const QuickReadPage: React.FC = () => {
-  const { newsList, markNews } = useAppContext();
-  const [filter, setFilter] = useState<FilterType>('all');
+  const {
+    newsList,
+    markNews,
+    filterNewsByKeywords,
+    sortNews,
+    subscribedKeywordNames
+  } = useAppContext();
 
-  const filters = [
-    { key: 'all' as FilterType, label: '全部报道' },
-    { key: 'positive' as FilterType, label: '正面宣传' },
-    { key: 'neutral' as FilterType, label: '普通报道' },
-    { key: 'negative' as FilterType, label: '负面预警' }
+  const [filter, setFilter] = useState<FilterType>('all');
+  const [sortMode, setSortMode] = useState<SortMode>('priority');
+
+  const baseList = useMemo(
+    () => filterNewsByKeywords(newsList),
+    [newsList, filterNewsByKeywords]
+  );
+
+  const filteredList = useMemo(() => {
+    let list = baseList;
+    if (filter !== 'all') list = list.filter(n => n.sentiment === filter);
+    return sortNews(list, sortMode);
+  }, [baseList, filter, sortMode, sortNews]);
+
+  const counts = useMemo(() => {
+    const total = baseList.length;
+    const pos = baseList.filter(n => n.sentiment === 'positive').length;
+    const neu = baseList.filter(n => n.sentiment === 'neutral').length;
+    const neg = baseList.filter(n => n.sentiment === 'negative').length;
+    const unread = baseList.filter(n => !n.isRead).length;
+    const priority = baseList.filter(n => {
+      const isNeg = n.sentiment === 'negative';
+      const isUrgent = ['潜在负面', '持续发酵', '竞品对比', '竞品动态'].some(t =>
+        n.keywords.some(k => k.includes(t)) || t === n.sentimentLabel
+      );
+      return !n.isRead || isNeg || isUrgent;
+    }).length;
+    return { total, positive: pos, neutral: neu, negative: neg, unread, priority };
+  }, [baseList]);
+
+  const filterOptions: { key: FilterType; label: string }[] = [
+    { key: 'all', label: '全部' },
+    { key: 'negative', label: '负面预警' },
+    { key: 'neutral', label: '普通报道' },
+    { key: 'positive', label: '正面宣传' }
   ];
 
-  const filteredNews = useMemo(() => {
-    if (filter === 'all') return newsList;
-    return newsList.filter(n => n.sentiment === filter);
-  }, [newsList, filter]);
+  const isPriorityItem = useCallback((n: NewsItem, idx: number): boolean => {
+    if (sortMode !== 'priority') return false;
+    const isNeg = n.sentiment === 'negative';
+    const isUrgent = ['潜在负面', '持续发酵', '竞品对比', '竞品动态'].some(
+      t => n.keywords.some(k => k.includes(t)) || t === n.sentimentLabel
+    );
+    return (!n.isRead || isNeg || isUrgent) && idx < Math.min(5, counts.priority);
+  }, [sortMode, counts.priority]);
 
-  const handleMark = useCallback((id: string, markType: MarkType) => {
-    markNews(id, markType);
-    const labels = {
-      read: '已标记为已读',
-      headquarters: '已提交总部回应',
-      region: '已转交区域核实'
-    };
-    Taro.showToast({
-      title: labels[markType],
-      icon: 'success'
-    });
-  }, [markNews]);
+  const handleMark = useCallback(
+    (e: React.MouseEvent, id: string, markType: MarkType) => {
+      e.stopPropagation();
+      markNews(id, markType);
+      const labels = {
+        read: '已标记为已读',
+        headquarters: '已提交总部回应',
+        region: '已转交区域核实'
+      };
+      Taro.showToast({ title: labels[markType], icon: 'success' });
+    },
+    [markNews]
+  );
 
-  const handleViewDetail = useCallback((id: string) => {
-    Taro.navigateTo({
-      url: `/pages/detail/index?id=${id}`
-    });
-  }, []);
+  const goDetail = useCallback(
+    (e: React.MouseEvent, id: string) => {
+      e.stopPropagation();
+      Taro.navigateTo({ url: `/pages/detail/index?id=${id}` });
+    },
+    []
+  );
 
   usePullDownRefresh(() => {
     setTimeout(() => {
       Taro.stopPullDownRefresh();
-      Taro.showToast({
-        title: '刷新成功',
-        icon: 'success'
-      });
-    }, 800);
+      Taro.showToast({ title: '刷新成功', icon: 'success' });
+    }, 600);
   });
 
   return (
-    <View className={styles.pageContainer}>
+    <ScrollView scrollY className={styles.pageContainer}>
       <View className={styles.pageHeader}>
-        <View className={styles.headerTitle}>
-          <Text className={styles.title}>媒体快读</Text>
-          <Text className={styles.aiBadge}>AI 摘要</Text>
+        <View className={styles.headerTitleRow}>
+          <View className={styles.headerTitle}>
+            <Text className={styles.title}>媒体快读</Text>
+            <Text className={styles.aiBadge}>AI 摘要</Text>
+          </View>
+          <View
+            className={styles.recordsLink}
+            onClick={() => Taro.navigateTo({ url: '/pages/records/index' })}
+          >
+            <Text>处置记录</Text>
+            <Text>›</Text>
+          </View>
         </View>
-        <Text className={styles.headerDesc}>智能提炼核心观点，快速把握报道脉络</Text>
+        <Text className={styles.headerDesc}>
+          智能提炼核心观点，{counts.unread} 条未读 · 共 {counts.total} 条报道
+        </Text>
+
+        <View className={styles.modeSwitch}>
+          <View
+            className={classnames(styles.modeItem, sortMode === 'priority' && styles.active)}
+            onClick={() => setSortMode('priority')}
+          >
+            <View className={classnames(styles.flag, styles.high)} />
+            <Text>今日重点</Text>
+          </View>
+          <View
+            className={classnames(styles.modeItem, sortMode === 'time' && styles.active)}
+            onClick={() => setSortMode('time')}
+          >
+            <View className={classnames(styles.flag, styles.time)} />
+            <Text>按时间</Text>
+          </View>
+        </View>
       </View>
 
-      <ScrollView scrollX className={styles.filterBar}>
-        {filters.map(f => (
-          <View
-            key={f.key}
-            className={classnames(styles.filterTag, filter === f.key && styles.active)}
-            onClick={() => setFilter(f.key)}
-          >
-            {f.label}
-          </View>
-        ))}
-      </ScrollView>
+      <View className={styles.subscriptionWrap}>
+        <SubscriptionBar />
+      </View>
+
+      {sortMode === 'priority' && counts.priority > 0 && (
+        <View className={styles.sortHint}>
+          <View className={styles.dot} />
+          <Text>
+            今日重点：未读 {counts.unread} 条 · 潜在负面和竞品对比已优先
+          </Text>
+        </View>
+      )}
+
+      <View className={styles.filterBar}>
+        <ScrollView scrollX className={styles.inner}>
+          {filterOptions.map(f => (
+            <View
+              key={f.key}
+              className={classnames(styles.filterTag, filter === f.key && styles.active)}
+              onClick={() => setFilter(f.key)}
+            >
+              <Text>{f.label}</Text>
+              <Text className={styles.cnt}>
+                {f.key === 'all'
+                  ? counts.total
+                  : counts[f.key as 'positive' | 'neutral' | 'negative']}
+              </Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
 
       <View className={styles.listContainer}>
-        {filteredNews.length > 0 ? (
-          filteredNews.map(news => (
+        {filteredList.length > 0 ? (
+          filteredList.map((news, idx) => (
             <View
               key={news.id}
-              className={classnames(styles.summaryCard, news.isRead && styles.isRead)}
+              className={classnames(
+                styles.summaryCard,
+                isPriorityItem(news, idx) && styles.priorityCard,
+                news.isRead && styles.isRead
+              )}
+              onClick={(e) => goDetail(e, news.id)}
             >
+              {isPriorityItem(news, idx) && (
+                <View className={styles.priorityBadge}>重点</View>
+              )}
+
               <View className={styles.cardHeader}>
                 <View className={styles.sourceInfo}>
                   <SentimentTag sentiment={news.sentiment} label={news.sentimentLabel} />
                   <Text className={styles.source}>{news.source}</Text>
                   <Text className={styles.time}>{news.publishTime}</Text>
                 </View>
+                {news.markLabel && (
+                  <View
+                    className={classnames(
+                      styles.markStatus,
+                      news.mark === 'headquarters' && styles.markHQ,
+                      news.mark === 'region' && styles.markRegion,
+                      news.mark === 'read' && styles.markRead
+                    )}
+                  >
+                    {news.markLabel}
+                  </View>
+                )}
               </View>
 
               <Text className={styles.summaryTitle}>{news.title}</Text>
@@ -109,10 +218,14 @@ const QuickReadPage: React.FC = () => {
                   </View>
                   <View className={styles.tagsRow}>
                     {news.products.map((p, i) => (
-                      <Text key={`p-${i}`} className={styles.tagItem}>{p}</Text>
+                      <Text key={`p-${i}`} className={styles.tagItem}>
+                        {p}
+                      </Text>
                     ))}
                     {news.stores.map((s, i) => (
-                      <Text key={`s-${i}`} className={styles.tagItem}>{s}</Text>
+                      <Text key={`s-${i}`} className={styles.tagItem}>
+                        {s}
+                      </Text>
                     ))}
                   </View>
                 </View>
@@ -145,48 +258,57 @@ const QuickReadPage: React.FC = () => {
               )}
 
               <View className={styles.cardFooter}>
-                <View className={styles.footerLeft}>
+                <View className={styles.footerBtns}>
                   <View
-                    className={classnames(styles.actionBtn, styles.btnRead)}
-                    onClick={() => handleMark(news.id, 'read')}
+                    className={classnames(styles.actBtn, styles.btnRead)}
+                    onClick={(e) => handleMark(e, news.id, 'read')}
                   >
                     已读
                   </View>
                   <View
-                    className={classnames(styles.actionBtn, styles.btnHQ)}
-                    onClick={() => handleMark(news.id, 'headquarters')}
+                    className={classnames(styles.actBtn, styles.btnHQ)}
+                    onClick={(e) => handleMark(e, news.id, 'headquarters')}
                   >
                     总部回应
                   </View>
                   <View
-                    className={classnames(styles.actionBtn, styles.btnRegion)}
-                    onClick={() => handleMark(news.id, 'region')}
+                    className={classnames(styles.actBtn, styles.btnRegion)}
+                    onClick={(e) => handleMark(e, news.id, 'region')}
                   >
                     区域核实
                   </View>
                 </View>
                 <View
-                  className={styles.detailLink}
-                  onClick={() => handleViewDetail(news.id)}
+                  className={styles.detailBtn}
+                  onClick={(e) => goDetail(e, news.id)}
                 >
-                  详情 →
+                  <Text>详情</Text>
+                  <Text>→</Text>
                 </View>
               </View>
             </View>
           ))
         ) : (
           <View className={styles.emptyState}>
-            <Text className={styles.emptyText}>暂无相关报道</Text>
+            <View className={styles.emptyIcon}>📖</View>
+            <Text className={styles.emptyTitle}>
+              {subscribedKeywordNames.length === 0
+                ? '请先订阅关键词'
+                : '暂无匹配当前筛选的报道'}
+            </Text>
+            <Text className={styles.emptyDesc}>
+              调整筛选条件或订阅更多关键词查看更多内容
+            </Text>
           </View>
         )}
 
-        {filteredNews.length > 0 && (
+        {filteredList.length > 0 && (
           <View className={styles.bottomTip}>
-            <Text>AI 摘要仅供参考，请阅读原文了解详情</Text>
+            AI 摘要仅供参考，请阅读原文了解详情
           </View>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

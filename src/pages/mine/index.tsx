@@ -6,16 +6,11 @@ import classnames from 'classnames';
 import { useAppContext } from '@/store/app-context';
 
 const MinePage: React.FC = () => {
-  const { keywordList, toggleKeyword, newsList } = useAppContext();
+  const { keywordList, toggleKeyword, getMarkStats, getMarkedRecords } = useAppContext();
 
-  const markStats = useMemo(() => {
-    const marked = newsList.filter(n => n.mark);
-    return {
-      read: newsList.filter(n => n.isRead).length,
-      headquarters: marked.filter(n => n.mark === 'headquarters').length,
-      region: marked.filter(n => n.mark === 'region').length
-    };
-  }, [newsList]);
+  const markStats = useMemo(() => getMarkStats().total, [getMarkStats]);
+
+  const recordsCount = useMemo(() => getMarkedRecords().length, [getMarkedRecords]);
 
   const keywordCategories = useMemo(() => [
     {
@@ -44,7 +39,11 @@ const MinePage: React.FC = () => {
     toggleKeyword(id);
   }, [toggleKeyword]);
 
-  const handleMenuClick = useCallback((menuName: string) => {
+  const handleMenuClick = useCallback((menuName: string, route?: string) => {
+    if (route) {
+      Taro.navigateTo({ url: route });
+      return;
+    }
     Taro.showToast({
       title: `${menuName}功能开发中`,
       icon: 'none'
@@ -52,6 +51,13 @@ const MinePage: React.FC = () => {
   }, []);
 
   const menuItems = [
+    {
+      icon: '📋',
+      label: '处置记录',
+      badge: recordsCount > 0 ? String(recordsCount) : null,
+      highlight: true,
+      route: '/pages/records/index'
+    },
     { icon: '📊', label: '数据报表', badge: null },
     { icon: '🔔', label: '消息通知', badge: '3' },
     { icon: '📱', label: '账号设置', badge: null },
@@ -123,14 +129,14 @@ const MinePage: React.FC = () => {
       </View>
 
       <View className={styles.menuList}>
-        {menuItems.map((item, index) => (
+        {menuItems.map((item: any, index) => (
           <View
             key={index}
-            className={styles.menuItem}
-            onClick={() => handleMenuClick(item.label)}
+            className={classnames(styles.menuItem, item.highlight && styles.menuHighlight)}
+            onClick={() => handleMenuClick(item.label, item.route)}
           >
             <View className={styles.menuLeft}>
-              <View className={styles.menuIcon}>{item.icon}</View>
+              <View className={classnames(styles.menuIcon, item.highlight && styles.menuIconHighlight)}>{item.icon}</View>
               <Text className={styles.menuText}>{item.label}</Text>
             </View>
             <View>

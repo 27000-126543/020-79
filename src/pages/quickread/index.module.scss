@@ -3,35 +3,52 @@
 .pageContainer {
   min-height: 100vh;
   background: $color-bg-page;
-  padding-bottom: 140rpx;
+  padding-bottom: 40rpx;
 }
 
 .pageHeader {
   background: $color-bg-card;
   padding: $spacing-lg $page-padding;
   margin-bottom: $spacing-md;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.headerTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-xs;
 }
 
 .headerTitle {
   display: flex;
   align-items: center;
   gap: $spacing-sm;
-  margin-bottom: $spacing-xs;
 
   .title {
     font-size: $font-size-xl;
     font-weight: $font-weight-bold;
     color: $color-text-primary;
   }
-
   .aiBadge {
-    padding: 4rpx 16rpx;
+    padding: 6rpx 20rpx;
     background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
     color: $color-text-white;
     border-radius: $radius-round;
-    font-size: 20rpx;
-    font-weight: $font-weight-medium;
+    font-size: 22rpx;
+    font-weight: $font-weight-semibold;
+    box-shadow: 0 2rpx 8rpx rgba(30, 86, 160, 0.25);
   }
+}
+
+.recordsLink {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  transition: all $transition-base;
+  &:active { opacity: 0.7; }
 }
 
 .headerDesc {
@@ -39,19 +56,63 @@
   color: $color-text-tertiary;
 }
 
-.filterBar {
+.modeSwitch {
+  margin-top: $spacing-md;
   display: flex;
-  padding: 0 $page-padding;
-  margin-bottom: $spacing-md;
-  gap: $spacing-sm;
-  overflow-x: auto;
-  white-space: nowrap;
+  background: $color-bg-page;
+  border-radius: $radius-button;
+  padding: 6rpx;
+}
+
+.modeItem {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  border-radius: $radius-button;
+  transition: all $transition-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+
+  &.active {
+    background: $color-bg-card;
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  }
+
+  .flag {
+    width: 14rpx;
+    height: 14rpx;
+    border-radius: 50%;
+    &.high { background: $color-error; }
+    &.time { background: $color-primary; }
+  }
+}
+
+.subscriptionWrap {
+  padding: 0 $page-padding $spacing-md;
+}
+
+.filterBar {
+  padding: 0 $page-spacing $page-spacing;
+  margin-bottom: $spacing-xs;
+  .inner {
+    display: flex;
+    padding: 0 $page-padding;
+    gap: $spacing-sm;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
 
 .filterTag {
   display: inline-flex;
   align-items: center;
-  padding: 12rpx 28rpx;
+  padding: 14rpx 28rpx;
   background: $color-bg-card;
   border-radius: $radius-round;
   font-size: $font-size-sm;
@@ -59,14 +120,25 @@
   box-shadow: $shadow-card;
   flex-shrink: 0;
   transition: all $transition-base;
+  border: 2rpx solid transparent;
 
   &.active {
+    background: rgba(30, 86, 160, 0.06);
+    color: $color-primary;
+    border-color: rgba(30, 86, 160, 0.25);
+    font-weight: $font-weight-medium;
+  }
+  &:active { transform: scale(0.96); }
+  .cnt {
+    margin-left: 8rpx;
+    padding: 2rpx 10rpx;
+    border-radius: 20rpx;
+    background: $color-bg-page;
+    font-size: 22rpx;
+  }
+  &.active .cnt {
     background: $color-primary;
     color: $color-text-white;
-  }
-
-  &:active {
-    transform: scale(0.96);
   }
 }
 
@@ -81,14 +153,27 @@
   margin-bottom: $spacing-md;
   box-shadow: $shadow-card;
   transition: all $transition-base;
+  border: 2rpx solid transparent;
+  position: relative;
 
-  &:active {
-    transform: scale(0.98);
-    opacity: 0.95;
+  &:active { transform: scale(0.98); opacity: 0.96; }
+
+  &.priorityCard {
+    border-color: rgba(245, 63, 63, 0.2);
+    background: linear-gradient(180deg, #FFFBFA 0%, #FFFFFF 60%);
   }
+  &.isRead { opacity: 0.78; }
 
-  &.isRead {
-    opacity: 0.7;
+  .priorityBadge {
+    position: absolute;
+    top: 0;
+    left: 24rpx;
+    padding: 4rpx 14rpx 6rpx;
+    background: $color-error;
+    color: $color-text-white;
+    font-size: 20rpx;
+    font-weight: $font-weight-semibold;
+    border-radius: 0 0 10rpx 10rpx;
   }
 }
 
@@ -96,7 +181,9 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: $spacing-sm;
   margin-bottom: $spacing-md;
+  padding-top: $spacing-xs;
 }
 
 .sourceInfo {
@@ -104,13 +191,25 @@
   align-items: center;
   gap: $spacing-sm;
   flex-wrap: wrap;
+  flex: 1;
+}
+
+.markStatus {
+  padding: 6rpx 16rpx;
+  border-radius: $radius-xs;
+  font-size: 22rpx;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+
+  &.markRead { background: $color-tag-neutral; color: $color-text-tertiary; }
+  &.markHQ { background: $color-tag-warning; color: $color-warning; }
+  &.markRegion { background: rgba(30, 86, 160, 0.1); color: $color-primary; }
 }
 
 .source {
   font-size: $font-size-xs;
   color: $color-text-tertiary;
 }
-
 .time {
   font-size: $font-size-xs;
   color: $color-text-tertiary;
@@ -120,7 +219,7 @@
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
   color: $color-text-primary;
-  line-height: 1.4;
+  line-height: 1.45;
   margin-bottom: $spacing-md;
 }
 
@@ -130,24 +229,23 @@
   .sectionLabel {
     display: flex;
     align-items: center;
-    gap: 8rpx;
+    gap: 10rpx;
     font-size: $font-size-xs;
     color: $color-primary;
-    font-weight: $font-weight-medium;
+    font-weight: $font-weight-semibold;
     margin-bottom: $spacing-sm;
 
     .labelIcon {
-      width: 6rpx;
-      height: 24rpx;
+      width: 8rpx;
+      height: 28rpx;
       background: $color-primary;
-      border-radius: 3rpx;
+      border-radius: 4rpx;
     }
   }
-
   .sectionContent {
     font-size: $font-size-sm;
     color: $color-text-secondary;
-    line-height: 1.6;
+    line-height: 1.7;
     background: $color-bg-page;
     padding: $spacing-sm $spacing-md;
     border-radius: $radius-md;
@@ -162,29 +260,33 @@
 }
 
 .tagItem {
-  padding: 6rpx 16rpx;
+  padding: 8rpx 18rpx;
   background: rgba(30, 86, 160, 0.08);
   color: $color-primary;
   border-radius: $radius-xs;
   font-size: 22rpx;
+  font-weight: $font-weight-medium;
 }
 
 .quotesList {
   .quoteItem {
     position: relative;
-    padding-left: $spacing-md;
+    padding: $spacing-sm $spacing-md $spacing-sm 28rpx;
     font-size: $font-size-sm;
     color: $color-text-secondary;
-    line-height: 1.6;
+    line-height: 1.65;
     margin-bottom: $spacing-sm;
+    background: $color-bg-page;
+    border-radius: $radius-md;
 
     &::before {
-      content: '"';
+      content: '“';
       position: absolute;
-      left: 0;
-      top: 0;
+      left: 10rpx;
+      top: 4rpx;
       font-size: 36rpx;
       color: $color-primary;
+      opacity: 0.6;
       line-height: 1;
       font-family: serif;
     }
@@ -193,7 +295,8 @@
       display: block;
       font-size: $font-size-xs;
       color: $color-text-tertiary;
-      margin-top: 4rpx;
+      margin-top: 6rpx;
+      text-align: right;
     }
   }
 }
@@ -201,21 +304,21 @@
 .cardFooter {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding-top: $spacing-md;
   border-top: 1rpx solid $color-divider;
   margin-top: $spacing-sm;
-}
-
-.footerLeft {
-  display: flex;
   gap: $spacing-sm;
+}
+
+.footerBtns {
+  display: flex;
+  gap: $spacing-xs;
   flex: 1;
 }
 
-.actionBtn {
+.actBtn {
   flex: 1;
-  height: 56rpx;
+  height: 60rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -224,42 +327,40 @@
   font-weight: $font-weight-medium;
   transition: all $transition-base;
 
-  &:active {
-    transform: scale(0.94);
-  }
+  &:active { transform: scale(0.94); opacity: 0.85; }
 }
+.btnRead { background: $color-bg-hover; color: $color-text-secondary; }
+.btnHQ { background: $color-tag-warning; color: $color-warning; }
+.btnRegion { background: rgba(30, 86, 160, 0.1); color: $color-primary; }
 
-.btnRead {
-  background: $color-bg-hover;
-  color: $color-text-secondary;
-}
-
-.btnHQ {
-  background: $color-tag-warning;
-  color: $color-warning;
-}
-
-.btnRegion {
-  background: rgba(30, 86, 160, 0.1);
-  color: $color-primary;
-}
-
-.detailLink {
+.detailBtn {
+  padding: 10rpx 22rpx;
+  border-radius: $radius-button;
+  background: $color-primary;
+  color: $color-text-white;
   font-size: $font-size-xs;
-  color: $color-text-tertiary;
+  font-weight: $font-weight-medium;
   display: flex;
   align-items: center;
   gap: 4rpx;
+  box-shadow: 0 2rpx 8rpx rgba(30, 86, 160, 0.2);
+  transition: all $transition-base;
+  &:active { transform: scale(0.94); }
 }
 
 .emptyState {
-  padding: 120rpx 0;
+  padding: 120rpx 40rpx;
   text-align: center;
-
-  .emptyText {
-    font-size: $font-size-sm;
-    color: $color-text-tertiary;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  .emptyIcon { font-size: 80rpx; margin-bottom: $spacing-md; }
+  .emptyTitle {
+    font-size: $font-size-md;
+    color: $color-text-primary;
+    margin-bottom: 8rpx;
+    font-weight: $font-weight-semibold;
   }
+  .emptyDesc { font-size: $font-size-sm; color: $color-text-tertiary; line-height: 1.6; }
 }
 
 .bottomTip {
@@ -267,4 +368,21 @@
   padding: $spacing-md 0;
   font-size: $font-size-xs;
   color: $color-text-tertiary;
+  opacity: 0.8;
+}
+
+.sortHint {
+  padding: 4rpx 16rpx;
+  margin: 0 $page-padding $spacing-sm;
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  .dot {
+    width: 10rpx;
+    height: 10rpx;
+    border-radius: 50%;
+    background: $color-error;
+  }
 }

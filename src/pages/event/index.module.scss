@@ -3,6 +3,7 @@
 .pageContainer {
   min-height: 100vh;
   background: $color-bg-page;
+  padding-bottom: 140rpx;
 }
 
 .header {
@@ -15,25 +16,33 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: $spacing-lg;
+  margin-bottom: $spacing-md;
 }
 
-.greeting {
-  font-size: $font-size-lg;
-  font-weight: $font-weight-semibold;
-}
-
-.date {
-  font-size: $font-size-sm;
-  opacity: 0.8;
+.greetingWrap {
+  .greeting {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    display: block;
+    margin-bottom: 4rpx;
+  }
+  .date {
+    font-size: $font-size-sm;
+    opacity: 0.85;
+  }
 }
 
 .refreshBtn {
-  padding: 8rpx 20rpx;
+  padding: 12rpx 24rpx;
   background: rgba(255, 255, 255, 0.2);
   border-radius: $radius-round;
   font-size: $font-size-xs;
   color: $color-text-white;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  transition: all $transition-base;
+  &:active { opacity: 0.8; }
 }
 
 .statsTitle {
@@ -50,6 +59,10 @@
 .content {
   padding: 0 $page-padding;
   margin-top: -24rpx;
+}
+
+.filterHint {
+  margin-bottom: $spacing-md;
 }
 
 .tabBar {
@@ -74,17 +87,18 @@
     background: $color-primary;
     color: $color-text-white;
     font-weight: $font-weight-medium;
+    box-shadow: 0 2rpx 8rpx rgba(30, 86, 160, 0.3);
   }
 
   .tabCount {
     font-size: $font-size-xs;
     margin-left: 6rpx;
-    opacity: 0.8;
+    opacity: 0.85;
   }
 }
 
 .listContainer {
-  padding-bottom: 120rpx;
+  //
 }
 
 .listHeader {
@@ -92,13 +106,13 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: $spacing-sm;
+  padding: 0 4rpx;
 
   .listTitle {
     font-size: $font-size-md;
     font-weight: $font-weight-semibold;
     color: $color-text-primary;
   }
-
   .listCount {
     font-size: $font-size-xs;
     color: $color-text-tertiary;
@@ -113,7 +127,7 @@
   background: $color-bg-card;
   padding: $spacing-md $page-padding;
   padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
-  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.06);
+  box-shadow: 0 -2rpx 16rpx rgba(0, 0, 0, 0.06);
   display: flex;
   gap: $spacing-sm;
   z-index: 100;
@@ -121,7 +135,7 @@
 
 .actionBtn {
   flex: 1;
-  height: 80rpx;
+  height: 84rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,9 +144,11 @@
   font-weight: $font-weight-medium;
   transition: all $transition-base;
 
-  &:active {
-    transform: scale(0.96);
-    opacity: 0.9;
+  &:active { transform: scale(0.96); opacity: 0.9; }
+
+  .icon {
+    margin-right: 8rpx;
+    font-size: $font-size-md;
   }
 }
 
@@ -149,14 +165,37 @@
 .btnRegion {
   background: $color-primary;
   color: $color-text-white;
+  box-shadow: 0 4rpx 12rpx rgba(30, 86, 160, 0.25);
 }
 
 .emptyState {
-  padding: 120rpx 0;
+  padding: 120rpx 40rpx;
   text-align: center;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
 
-  .emptyText {
+  .emptyIcon {
+    font-size: 80rpx;
+    margin-bottom: $spacing-md;
+  }
+  .emptyTitle {
+    font-size: $font-size-md;
+    color: $color-text-primary;
+    margin-bottom: 8rpx;
+    font-weight: $font-weight-semibold;
+  }
+  .emptyDesc {
     font-size: $font-size-sm;
     color: $color-text-tertiary;
+    line-height: 1.6;
+  }
+  .emptyAction {
+    margin-top: $spacing-lg;
+    padding: 16rpx 40rpx;
+    display: inline-block;
+    background: $color-primary;
+    color: $color-text-white;
+    border-radius: $radius-button;
+    font-size: $font-size-sm;
   }
 }
